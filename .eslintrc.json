@@ -1,3 +1,126 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": ["next/core-web-vitals","airbnb-typescript/base","plugin:prettier/recommended", "next"],
+  "plugins": ["prettier", "@typescript-eslint"],
+  "env": {
+    "browser": true,
+    "node": true,
+    "jest": true
+  },
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json",
+    "tsconfigRootDir": ".",
+    "ecmaVersion": 2020,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "extraFileExtensions": [".json"]
+  },
+  "rules": {
+    "@typescript-eslint/no-use-before-define": ["error", {"functions": false, "classes": false}],
+    "prettier/prettier": [
+      2,
+      {
+        "parser": "typescript",
+        "printWidth": 110,
+        "useTabs": false,
+        "singleQuote": true,
+        "endOfLine": "auto",
+        "bracketSpacing": true,
+        "arrowParens": "always",
+        "trailingComma": "es5"
+      }
+    ],
+    "array-bracket-newline": [
+      2,
+      {
+        "multiline": true
+      }
+    ],
+    "array-element-newline": [
+      2,
+      "consistent"
+    ],
+    "block-scoped-var": 2,
+    "brace-style": [
+      2,
+      "1tbs",
+      {
+        "allowSingleLine": true
+      }
+    ],
+    "comma-dangle": [
+      2,
+      {
+        "arrays": "always-multiline",
+        "objects": "always-multiline",
+        "imports": "always-multiline",
+        "exports": "always-multiline"
+      }
+    ],
+    "consistent-return": 1,
+    "eol-last": 2,
+    "max-depth": 0,
+    "max-len": [
+      2,
+      {
+        "code": 110,
+        "tabWidth": 2,
+        "ignoreComments": true,
+        "ignoreRegExpLiterals": true,
+        "ignoreStrings": true,
+        "ignoreTemplateLiterals": true,
+        "ignoreUrls": true
+      }
+    ],
+    "max-params": [
+      2,
+      3
+    ],
+    "no-eval": 2,
+    "no-ex-assign": 2,
+    "no-extend-native": 2,
+    "no-extra-boolean-cast": 2,
+    "no-floating-decimal": 2,
+    "no-native-reassign": 2,
+    "no-negated-in-lhs": 2,
+    "no-unneeded-ternary": 2,
+    "no-unused-vars": [
+      2,
+      {
+        "vars": "all",
+        "args": "none"
+      }
+    ],
+    "no-var": 2,
+    "object-curly-spacing": [
+      2,
+      "always"
+    ],
+    "space-before-function-paren": [
+      2,
+      {
+        "anonymous": "always",
+        "named": "never"
+      }
+    ],
+    "space-in-parens": [
+      2,
+      "never"
+    ],
+    "space-unary-ops": [
+      2,
+      {
+        "words": true,
+        "nonwords": false
+      }
+    ],
+    "yoda": [
+      2,
+      "never"
+    ],
+    "arrow-body-style": "off",
+    "prefer-arrow-callback": "off"
+  }
 }
