@@ -7,6 +7,9 @@ import { useStoreModal } from '@/hooks/use-store-modal';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { useState } from 'react';
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const formSchema = z.object({
   name: z.string().min(1, 'Need at least one character'),
@@ -14,6 +17,7 @@ const formSchema = z.object({
 
 export function StoreModal() {
   const storeModal = useStoreModal();
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -23,7 +27,17 @@ export function StoreModal() {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+    console.log('front', new Date());
+    try {
+      setIsLoading(true);
+      const response = await axios.post('/api/stores', values);
+
+      window.location.assign('/' + response.data.id);
+    } catch (error) {
+      toast.error('Something went wrong');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -44,7 +58,7 @@ export function StoreModal() {
                   <FormItem>
                     <FormLabel>Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="E-Commerce" {...field} />
+                      <Input disabled={isLoading} placeholder="E-Commerce" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -54,7 +68,9 @@ export function StoreModal() {
                 <Button variant="outline" onClick={storeModal.onClose}>
                   Cancel
                 </Button>
-                <Button type="submit">Continue</Button>
+                <Button disabled={isLoading} type="submit">
+                  Continue
+                </Button>
               </div>
             </form>
           </Form>
