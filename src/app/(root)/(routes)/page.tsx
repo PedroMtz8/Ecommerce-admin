@@ -11,5 +11,5 @@ export default function Home() {
       onOpen();
     }
   }, [onOpen, isOpen]);
-  return <div className=" bg-slate-500 p-3 h-full "></div>;
+  return <div className="p-3 h-full "></div>;
 }
