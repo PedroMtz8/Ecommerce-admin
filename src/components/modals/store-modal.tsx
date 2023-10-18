@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 
 const formSchema = z.object({
   name: z.string().min(1, 'Need at least one character'),
@@ -17,7 +18,9 @@ const formSchema = z.object({
 
 export function StoreModal() {
   const storeModal = useStoreModal();
+  const [open, setOpen] = useState(storeModal.isOpen);
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -31,7 +34,9 @@ export function StoreModal() {
       setIsLoading(true);
       const response = await axios.post('/api/stores', values);
 
-      window.location.assign('/' + response.data.id);
+      router.push('/' + response.data.id);
+      setOpen(false);
+      storeModal.onClose();
     } catch (error) {
       toast.error('Something went wrong');
     } finally {
@@ -43,7 +48,7 @@ export function StoreModal() {
     <Modal
       title="Create tore"
       description="Add new store to manage products and categories"
-      isOpen={storeModal.isOpen}
+      isOpen={open}
       onClose={storeModal.onClose}
     >
       <div>
