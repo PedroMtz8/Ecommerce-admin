@@ -1,6 +1,7 @@
 import prismadb from '@/lib/prismadb';
 import { auth } from '@clerk/nextjs';
 import { redirect } from 'next/navigation';
+import SettingsForm from './components/settigns-form';
 
 export default async function SettingsPage({ params }: { params: { storeId: string } }) {
   const { userId } = auth();
@@ -17,7 +18,9 @@ export default async function SettingsPage({ params }: { params: { storeId: stri
 
   return (
     <div className="flex-col">
-      <div className="flex-1 space-y-4 p-8 pt-6">Hello settings </div>
+      <div className="flex-1 space-y-4 p-8 pt-6">
+        <SettingsForm initialData={store} />
+      </div>
     </div>
   );
 }
