@@ -16,6 +16,7 @@ import axios from 'axios';
 import { useParams, useRouter } from 'next/navigation';
 import { AlertModal } from '@/components/modals/alert-modal';
 import { useStoreModal } from '@/hooks/use-store-modal';
+import { ApiAlert } from '@/components/ui/api-alert';
 
 interface SettingsFormProps {
   initialData: Store;
@@ -101,6 +102,8 @@ export default function SettingsForm({ initialData }: SettingsFormProps) {
           </Button>
         </form>
       </Form>
+      <Separator />
+      <ApiAlert title="test" description="test description" />
     </>
   );
 }

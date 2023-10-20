@@ -38,9 +38,9 @@ export function StoreModal() {
     try {
       setIsLoading(true);
       const response = await axios.post('/api/stores', values);
+      router.push('/' + response.data.id);
       storeModal.onClose();
       setOpen(false);
-      router.push('/' + response.data.id);
     } catch (error) {
       toast.error('Something went wrong');
     } finally {

@@ -10,6 +10,11 @@ export default function MainNav({ className, ...props }: React.HTMLAttributes<HT
   console.log('main nav props', props);
   const routes = [
     {
+      href: `/${params.storeId}`,
+      label: 'Dashboard',
+      active: pathName === `/${params.storeId}/`,
+    },
+    {
       href: `/${params.storeId}/settings`,
       label: 'Settigns',
       active: pathName === `/${params.storeId}/settings`,
