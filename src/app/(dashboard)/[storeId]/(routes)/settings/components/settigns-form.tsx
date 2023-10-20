@@ -103,7 +103,7 @@ export default function SettingsForm({ initialData }: SettingsFormProps) {
         </form>
       </Form>
       <Separator />
-      <ApiAlert title="test" description="test description" />
+      <ApiAlert title="test" description="test description" variant="public" />
     </>
   );
 }
