@@ -7,10 +7,11 @@ import { useStoreModal } from '@/hooks/use-store-modal';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+import { Loader2 } from 'lucide-react';
 
 const formSchema = z.object({
   name: z.string().min(1, 'Need at least one character'),
@@ -21,6 +22,10 @@ export function StoreModal() {
   const [open, setOpen] = useState(storeModal.isOpen);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    setOpen(storeModal.isOpen);
+  }, [storeModal.isOpen]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -33,10 +38,9 @@ export function StoreModal() {
     try {
       setIsLoading(true);
       const response = await axios.post('/api/stores', values);
-
       router.push('/' + response.data.id);
-      setOpen(false);
       storeModal.onClose();
+      setOpen(false);
     } catch (error) {
       toast.error('Something went wrong');
     } finally {
@@ -73,7 +77,7 @@ export function StoreModal() {
                   Cancel
                 </Button>
                 <Button disabled={isLoading} type="submit">
-                  Continue
+                  Continue {isLoading && <Loader2 className="ml-2 animate-spin duration-1000" />}
                 </Button>
               </div>
             </form>
