@@ -17,6 +17,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { AlertModal } from '@/components/modals/alert-modal';
 import { useStoreModal } from '@/hooks/use-store-modal';
 import { ApiAlert } from '@/components/ui/api-alert';
+import { useOrigin } from '@/hooks/use-origin';
 
 interface SettingsFormProps {
   initialData: Store;
@@ -70,6 +71,8 @@ export default function SettingsForm({ initialData }: SettingsFormProps) {
     }
   };
 
+  const origin = useOrigin();
+
   return (
     <>
       <AlertModal loading={loading} isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} />
@@ -103,7 +106,11 @@ export default function SettingsForm({ initialData }: SettingsFormProps) {
         </form>
       </Form>
       <Separator />
-      <ApiAlert title="test" description="test description" variant="public" />
+      <ApiAlert
+        title="NEXT_PUBLIC_API_URL"
+        description={`${origin}/api/${params.storeId}`}
+        variant="public"
+      />
     </>
   );
 }

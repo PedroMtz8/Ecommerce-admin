@@ -1,7 +1,9 @@
+'use client';
 import { Copy, Server } from 'lucide-react';
 import { Badge, BadgeProps } from '@/components/ui/badge';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
+import toast from 'react-hot-toast';
 
 interface ApiAlertProps {
   title: string;
@@ -20,6 +22,10 @@ const variantMap: Record<ApiAlertProps['variant'], BadgeProps['variant']> = {
 };
 
 export function ApiAlert({ title, description, variant = 'public' }: ApiAlertProps) {
+  const onCopy = () => {
+    navigator.clipboard.writeText(description);
+    toast.success('API Route copied to the clipboard');
+  };
   return (
     <Alert>
       <Server className="w-4 h-4 " />
@@ -31,7 +37,7 @@ export function ApiAlert({ title, description, variant = 'public' }: ApiAlertPro
         <code className="relative rounded bg-muted px-[0.3rem] py-[0.3rem] font-mono text-sm font-semibold ">
           {description}
         </code>
-        <Button variant="outline" size="icon" onClick={() => {}}>
+        <Button variant="outline" size="icon" onClick={onCopy}>
           <Copy className="w-4 h-4" />
         </Button>
       </AlertDescription>
