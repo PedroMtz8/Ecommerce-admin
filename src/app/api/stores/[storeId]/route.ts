@@ -50,7 +50,7 @@ export async function DELETE(_req: Request, { params: { storeId } }: { params: {
 
     return NextResponse.json({ message: 'Store deleted', store }, { status: 200 });
   } catch (error) {
-    console.log('[STORE_PATCH]', error);
+    console.log('[STORE_DELETE]', error);
     return new NextResponse('Internal Server Error', { status: 500 });
   }
 }
