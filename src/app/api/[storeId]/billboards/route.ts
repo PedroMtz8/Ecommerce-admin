@@ -30,7 +30,7 @@ export async function POST(req: Request, { params }: { params: { storeId: string
 
     if (!storeByUserId) return NextResponse.json({ message: 'Unauthenticated' }, { status: 403 });
 
-    const store = await prismadb.billboard.create({
+    const billboard = await prismadb.billboard.create({
       data: {
         label,
         imageUrl,
@@ -41,7 +41,24 @@ export async function POST(req: Request, { params }: { params: { storeId: string
       },
     });
 
-    return NextResponse.json(store, { status: 200 });
+    return NextResponse.json({ billboard, message: 'Billboard created!' }, { status: 200 });
+  } catch (error) {
+    console.log('[BILLBOARDS_POST]', error);
+    return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
+  }
+}
+
+export async function GET(req: Request, { params }: { params: { storeId: string } }) {
+  try {
+    if (!params.storeId) return NextResponse.json({ message: 'Store id is required' }, { status: 400 });
+
+    const billboard = await prismadb.billboard.findMany({
+      where: {
+        storeId: params.storeId,
+      },
+    });
+
+    return NextResponse.json({ billboard, message: 'Billboards', total: billboard.length }, { status: 200 });
   } catch (error) {
     console.log('[BILLBOARDS_POST]', error);
     return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
