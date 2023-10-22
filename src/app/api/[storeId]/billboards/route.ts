@@ -60,7 +60,7 @@ export async function GET(req: Request, { params }: { params: { storeId: string 
 
     return NextResponse.json({ billboard, message: 'Billboards', total: billboard.length }, { status: 200 });
   } catch (error) {
-    console.log('[BILLBOARDS_POST]', error);
+    console.log('[BILLBOARDS_GET]', error);
     return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
   }
 }
