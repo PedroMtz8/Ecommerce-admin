@@ -51,13 +51,12 @@ export default function BillboardForm({ initialData }: BillboardFormProps) {
   const action = initialData ? 'Save changes' : 'Create';
 
   const onSubmit = async (data: BillboardFormValues) => {
-    console.log(data);
     try {
       setLoading(true);
       if (initialData) {
-        await axios.patch(`/api/${params.storeId}/billboards/${params.billboardId}` + params.storeId, data);
+        await axios.patch(`/api/${params.storeId}/billboards/${params.billboardId}`, data);
       } else {
-        await axios.post(`/api/${params.storeId}/billboards` + params.storeId, data);
+        await axios.post(`/api/${params.storeId}/billboards`, data);
       }
       router.refresh();
       toast.success(toastMessage);
@@ -98,7 +97,7 @@ export default function BillboardForm({ initialData }: BillboardFormProps) {
       </div>
       <Separator />
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full ">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
           <FormField
             control={form.control}
             name="imageUrl"

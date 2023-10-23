@@ -19,7 +19,14 @@ export async function GET(_req: Request, { params }: { params: { billboardId: st
   }
 }
 
-export async function PATCH(req: Request, { params }: { params: { billboardId: string; storeId: string } }) {
+interface Params {
+  params: {
+    storeId: string;
+    billboardId: string;
+  };
+}
+
+export async function PATCH(req: Request, { params }: Params) {
   try {
     const { userId } = auth();
 
