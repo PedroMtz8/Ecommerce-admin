@@ -33,7 +33,6 @@ export async function PATCH(req: Request, { params }: Params) {
     if (!userId) return new NextResponse('Unauthenticated', { status: 401 });
 
     const body = await req.json();
-    /* console.log('body: ', body); */
 
     const { label, imageUrl } = body;
     if (!label || !imageUrl)

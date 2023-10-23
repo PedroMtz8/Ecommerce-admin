@@ -51,7 +51,6 @@ export default function BillboardForm({ initialData }: BillboardFormProps) {
   const action = initialData ? 'Save changes' : 'Create';
 
   const onSubmit = async (data: BillboardFormValues) => {
-    console.log(data);
     try {
       setLoading(true);
       if (initialData) {
