@@ -40,7 +40,6 @@ export async function POST(req: Request, { params }: { params: { storeId: string
         updatedAt: nowMexico,
       },
     });
-
     return NextResponse.json({ billboard, message: 'Billboard created!' }, { status: 200 });
   } catch (error) {
     console.log('[BILLBOARDS_POST]', error);
