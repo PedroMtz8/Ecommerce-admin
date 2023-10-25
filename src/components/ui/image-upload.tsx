@@ -28,7 +28,7 @@ export default function ImageUpload({ disabled, onChange, onRemove, value }: Ima
 
   return (
     <>
-      <div className="mb-4 flex flex-col  ap-4 ">
+      <div className="mb-4 flex items-center gap-4 ">
         {value.map((url) => (
           <div key={url} className="relative w-[200px] h-[200px] rounded-md overflow-hidden ">
             <div className="z-10 absolute top-2 right-2">
@@ -45,13 +45,7 @@ export default function ImageUpload({ disabled, onChange, onRemove, value }: Ima
               open();
             };
             return (
-              <Button
-                type="button"
-                className="w-[max-content] mt-2"
-                onClick={onClick}
-                disabled={disabled}
-                variant="secondary"
-              >
+              <Button type="button" onClick={onClick} disabled={disabled} variant="secondary">
                 <ImagePlus className="mr-2 w-4 h-4 " />
                 Upload an image
               </Button>

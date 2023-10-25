@@ -18,7 +18,6 @@
     "extraFileExtensions": [".json"]
   },
   "rules": {
-    "@next/next/no-document-import-in-page": "off",
     "@typescript-eslint/no-use-before-define": ["error", {"functions": false, "classes": false}],
     "prettier/prettier": [
       2,
