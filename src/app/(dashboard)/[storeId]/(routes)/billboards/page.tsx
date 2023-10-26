@@ -1,5 +1,6 @@
 import prismadb from '@/lib/prismadb';
-import BillboardClient from './client';
+import BillboardClient from './components/client';
+import { format } from 'date-fns';
 
 interface BillboardsPageProps {
   params: {
@@ -17,10 +18,16 @@ export default async function BillboardsPage({ params }: BillboardsPageProps) {
     },
   });
 
+  const formatedBillboards = billboards.map((billboard) => ({
+    label: billboard.label,
+    id: billboard.id,
+    createdAt: format(billboard.createdAt, 'MMMM do, yyyy'),
+  }));
+
   return (
     <div className="flex-col  ">
       <div className="flex-1 space-y-4 p-4 pt-6 ">
-        <BillboardClient data={billboards} />
+        <BillboardClient data={formatedBillboards} />
       </div>
     </div>
   );
