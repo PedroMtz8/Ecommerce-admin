@@ -111,7 +111,21 @@ export default function BillboardForm({ initialData }: BillboardFormProps) {
                     value={field.value ? [field.value] : []}
                     disabled={loading}
                     onChange={(url) => field.onChange(url)}
-                    onRemove={() => field.onChange('')}
+                    onRemove={async () => {
+                      try {
+                        const getPublicId = (imageURL: string) => imageURL.split('/').pop()?.split('.')[0];
+
+                        const publicId = getPublicId(field.value);
+                        // const cl = new cloudinary.Cloudinary({ cloud_name: cloudName });
+
+                        if (publicId) {
+                          await axios.delete(`/api/remove-image?publicId=${publicId}`);
+                          field.onChange('');
+                        }
+                      } catch (error) {
+                        console.log(error);
+                      }
+                    }}
                   />
                 </FormControl>
                 <FormMessage />
@@ -138,7 +152,6 @@ export default function BillboardForm({ initialData }: BillboardFormProps) {
           </Button>
         </form>
       </Form>
-      <Separator />
     </>
   );
 }
