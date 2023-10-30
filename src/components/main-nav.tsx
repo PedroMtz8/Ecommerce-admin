@@ -7,7 +7,7 @@ import { useParams, usePathname } from 'next/navigation';
 export default function MainNav({ className, ...props }: React.HTMLAttributes<HTMLElement>) {
   const pathName = usePathname();
   const params = useParams();
-  console.log('main nav props', props);
+  console.log('main nav props change', props);
   const routes = [
     {
       href: `/${params.storeId}`,
