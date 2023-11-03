@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
 import { Button } from '@/components/ui/button';
@@ -8,7 +9,7 @@ import { Billboard } from '@prisma/client';
 import { Trash, Loader2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import toast from 'react-hot-toast';
@@ -86,6 +87,33 @@ export default function BillboardForm({ initialData }: BillboardFormProps) {
     }
   };
 
+  const [imageUrl, setImageUrl] = useState('');
+
+  const removeImageCloud = async (url: string) => {
+    try {
+      const getPublicId = (imageURL: string) => imageURL.split('/').pop()?.split('.')[0];
+
+      const publicId = getPublicId(url);
+      // const cl = new cloudinary.Cloudinary({ cloud_name: cloudName });
+
+      if (publicId) {
+        await axios.delete(`/api/remove-image?publicId=${publicId}`);
+        form.setValue('imageUrl', '');
+        setImageUrl('');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (imageUrl) {
+        removeImageCloud(imageUrl);
+      }
+    };
+  }, []);
+
   return (
     <>
       <AlertModal loading={loading} isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} />
@@ -110,21 +138,11 @@ export default function BillboardForm({ initialData }: BillboardFormProps) {
                   <ImageUpload
                     value={field.value ? [field.value] : []}
                     disabled={loading}
-                    onChange={(url) => field.onChange(url)}
+                    onChange={(url) => {
+                      field.onChange(url);
+                    }}
                     onRemove={async () => {
-                      try {
-                        const getPublicId = (imageURL: string) => imageURL.split('/').pop()?.split('.')[0];
-
-                        const publicId = getPublicId(field.value);
-                        // const cl = new cloudinary.Cloudinary({ cloud_name: cloudName });
-
-                        if (publicId) {
-                          await axios.delete(`/api/remove-image?publicId=${publicId}`);
-                          field.onChange('');
-                        }
-                      } catch (error) {
-                        console.log(error);
-                      }
+                      await removeImageCloud(field.value);
                     }}
                   />
                 </FormControl>
