@@ -18,6 +18,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { AlertModal } from '@/components/modals/alert-modal';
 import { useStoreModal } from '@/hooks/use-store-modal';
 import ImageUpload from '@/components/ui/image-upload';
+import { useImgUrl } from '@/hooks/use-remove-unsaved-url';
 
 const formSchema = z.object({
   label: z.string().min(1, 'At least one character'),
@@ -41,6 +42,8 @@ export default function BillboardForm({ initialData }: BillboardFormProps) {
     },
   });
 
+  const { url: imageUrl, setUrl, unsetUrl } = useImgUrl();
+
   const storeModal = useStoreModal();
 
   const params = useParams();
@@ -58,9 +61,13 @@ export default function BillboardForm({ initialData }: BillboardFormProps) {
       if (initialData) {
         await axios.patch(`/api/${params.storeId}/billboards/${params.billboardId}`, data);
       } else {
+        unsetUrl();
         const response = await axios.post(`/api/${params.storeId}/billboards`, data);
+        form.reset();
         billboardId = response.data.billboard.id;
-        router.push(`/${params.storeId}/billboards/${billboardId}`);
+        setTimeout(() => {
+          router.push(`/${params.storeId}/billboards/${billboardId}`);
+        }, 500);
       }
       router.refresh();
       toast.success(toastMessage);
@@ -74,6 +81,7 @@ export default function BillboardForm({ initialData }: BillboardFormProps) {
   const onDelete = async () => {
     try {
       setLoading(true);
+      unsetUrl();
       await axios.delete(`/api/${params.storeId}/billboards/${params.billboardId}`);
       storeModal.onClose();
       router.refresh();
@@ -87,19 +95,16 @@ export default function BillboardForm({ initialData }: BillboardFormProps) {
     }
   };
 
-  const [imageUrl, setImageUrl] = useState('');
-
   const removeImageCloud = async (url: string) => {
     try {
       const getPublicId = (imageURL: string) => imageURL.split('/').pop()?.split('.')[0];
-
       const publicId = getPublicId(url);
       // const cl = new cloudinary.Cloudinary({ cloud_name: cloudName });
-
+      console.log('PUBLICID', publicId);
       if (publicId) {
-        await axios.delete(`/api/remove-image?publicId=${publicId}`);
         form.setValue('imageUrl', '');
-        setImageUrl('');
+        const response = await axios.delete(`/api/remove-image?publicId=${publicId}`);
+        console.log(response.data);
       }
     } catch (error) {
       console.log(error);
@@ -108,9 +113,13 @@ export default function BillboardForm({ initialData }: BillboardFormProps) {
 
   useEffect(() => {
     return () => {
-      if (imageUrl) {
-        removeImageCloud(imageUrl);
+      async function some() {
+        if (imageUrl) {
+          await removeImageCloud(imageUrl);
+          unsetUrl();
+        }
       }
+      some();
     };
   }, []);
 
@@ -140,8 +149,10 @@ export default function BillboardForm({ initialData }: BillboardFormProps) {
                     disabled={loading}
                     onChange={(url) => {
                       field.onChange(url);
+                      setUrl(url);
                     }}
                     onRemove={async () => {
+                      // field.onChange('');
                       await removeImageCloud(field.value);
                     }}
                   />
