@@ -1,6 +1,8 @@
 import prismadb from '@/lib/prismadb';
 import { auth } from '@clerk/nextjs';
 import { NextResponse } from 'next/server';
+import { extractPublicId } from 'cloudinary-build-url';
+import { deleteImageCloudinary } from '@/lib/cloudinary';
 
 export async function GET(_req: Request, { params }: { params: { billboardId: string } }) {
   try {
@@ -94,6 +96,8 @@ export async function DELETE(
         id: params.billboardId,
       },
     });
+    const publicID = extractPublicId(billboard.imageUrl);
+    await deleteImageCloudinary(publicID);
 
     return NextResponse.json({ message: 'Billboard deleted', billboard }, { status: 200 });
   } catch (error) {
