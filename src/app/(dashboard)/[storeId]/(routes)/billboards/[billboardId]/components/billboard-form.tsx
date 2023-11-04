@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
@@ -110,6 +111,11 @@ export default function BillboardForm({ initialData }: BillboardFormProps) {
       console.log(error);
     }
   };
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -119,9 +125,11 @@ export default function BillboardForm({ initialData }: BillboardFormProps) {
           unsetUrl();
         }
       }
-      some();
+      if (mounted) {
+        some();
+      }
     };
-  }, []);
+  }, [mounted]);
 
   return (
     <>
