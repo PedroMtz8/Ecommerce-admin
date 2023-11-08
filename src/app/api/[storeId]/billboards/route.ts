@@ -51,13 +51,16 @@ export async function GET(req: Request, { params }: { params: { storeId: string 
   try {
     if (!params.storeId) return NextResponse.json({ message: 'Store id is required' }, { status: 400 });
 
-    const billboard = await prismadb.billboard.findMany({
+    const billboards = await prismadb.billboard.findMany({
       where: {
         storeId: params.storeId,
       },
     });
 
-    return NextResponse.json({ billboard, message: 'Billboards', total: billboard.length }, { status: 200 });
+    return NextResponse.json(
+      { billboards, message: 'Billboards', total: billboards.length },
+      { status: 200 }
+    );
   } catch (error) {
     console.log('[BILLBOARDS_GET]', error);
     return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
