@@ -21,7 +21,7 @@ import { useStoreModal } from '@/hooks/use-store-modal';
 
 const formSchema = z.object({
   name: z.string().min(1, 'At least one character'),
-  billboardId: z.string().min(1, 'At least one character'),
+  categoryId: z.string().min(1, 'At least one character'),
 });
 
 type CategoryFormValues = z.infer<typeof formSchema>;
@@ -37,7 +37,7 @@ export default function CategoryForm({ initialData }: CategoryFormProps) {
     resolver: zodResolver(formSchema),
     defaultValues: initialData || {
       name: '',
-      billboardId: '',
+      categoryId: '',
     },
   });
 
