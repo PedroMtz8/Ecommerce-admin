@@ -10,10 +10,10 @@ export async function POST(req: Request, { params }: { params: { storeId: string
 
     if (!userId) return NextResponse.json({ message: 'Unauthenticated' }, { status: 401 });
 
-    const { name, billboardId } = body;
+    const { name, value } = body;
 
     if (!name) return NextResponse.json({ message: 'Label is required' }, { status: 400 });
-    if (!billboardId) return NextResponse.json({ message: 'Image url is required' }, { status: 400 });
+    if (!value) return NextResponse.json({ message: 'Image url is required' }, { status: 400 });
 
     if (!params.storeId) return NextResponse.json({ message: 'Store id is required' }, { status: 400 });
 
@@ -30,19 +30,19 @@ export async function POST(req: Request, { params }: { params: { storeId: string
 
     if (!storeByUserId) return NextResponse.json({ message: 'Unauthenticated' }, { status: 403 });
 
-    const category = await prismadb.category.create({
+    const size = await prismadb.size.create({
       data: {
         name,
-        billboardId,
+        value,
         // userId,
         storeId: params.storeId,
         createdAt: nowMexico,
         updatedAt: nowMexico,
       },
     });
-    return NextResponse.json({ category, message: 'Category created!' }, { status: 200 });
+    return NextResponse.json({ size, message: 'Size created!' }, { status: 200 });
   } catch (error) {
-    console.log('[CATEGORIES_POST]', error);
+    console.log('[SIZES_POST]', error);
     return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
   }
 }
@@ -51,15 +51,15 @@ export async function GET(req: Request, { params }: { params: { storeId: string 
   try {
     if (!params.storeId) return NextResponse.json({ message: 'Store id is required' }, { status: 400 });
 
-    const categories = await prismadb.category.findMany({
+    const sizes = await prismadb.size.findMany({
       where: {
         storeId: params.storeId,
       },
     });
 
-    return NextResponse.json({ categories, message: 'Category', total: categories.length }, { status: 200 });
+    return NextResponse.json({ sizes, message: 'Size', total: sizes.length }, { status: 200 });
   } catch (error) {
-    console.log('[CATEGORIES_GET]', error);
+    console.log('[SIZES_GET]', error);
     return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
   }
 }

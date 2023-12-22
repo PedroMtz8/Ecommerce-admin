@@ -12,7 +12,7 @@ export async function GET(_req: Request, { params }: { params: { categoryId: str
       },
     });
 
-    return NextResponse.json({ message: 'Category deleted', category }, { status: 200 });
+    return NextResponse.json({ message: 'Category data', category }, { status: 200 });
   } catch (error) {
     console.log('[CATEGORY_GET]', error);
     return new NextResponse('Internal Server Error', { status: 500 });
@@ -94,7 +94,7 @@ export async function DELETE(_req: Request, { params }: { params: { storeId: str
 
     return NextResponse.json({ message: 'Category deleted', category }, { status: 200 });
   } catch (error) {
-    console.log('[CATEGORY_PATCH]', error);
+    console.log('[CATEGORY_DELETE]', error);
     return new NextResponse('Internal Server Error', { status: 500 });
   }
 }

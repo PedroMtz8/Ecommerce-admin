@@ -27,7 +27,7 @@ export default function SizeClient({ data }: SizeClientProps) {
         </Button>
       </div>
       <Separator />
-      <DataTable columns={columns} data={data} filterKey="label" />
+      <DataTable columns={columns} data={data} filterKey="name" />
       {/* ApiLis */}
       <Heading title="API" description="API calls for sizes" />
       <ApiList entityName="sizes" entityIdName="sizeId" />

@@ -1,22 +1,20 @@
 import prismadb from '@/lib/prismadb';
 import { auth } from '@clerk/nextjs';
 import { NextResponse } from 'next/server';
-import { extractPublicId } from 'cloudinary-build-url';
-import { deleteImageCloudinary } from '@/lib/cloudinary';
 
-export async function GET(_req: Request, { params }: { params: { billboardId: string } }) {
+export async function GET(_req: Request, { params }: { params: { sizeId: string } }) {
   try {
-    if (!params.billboardId) return new NextResponse('Billboard ID required', { status: 404 });
+    if (!params.sizeId) return new NextResponse('Size ID required', { status: 404 });
 
-    const billboard = await prismadb.billboard.findUnique({
+    const size = await prismadb.size.findUnique({
       where: {
-        id: params.billboardId,
+        id: params.sizeId,
       },
     });
 
-    return NextResponse.json({ message: 'Billboard data', billboard }, { status: 200 });
+    return NextResponse.json({ message: 'Size data', size }, { status: 200 });
   } catch (error) {
-    console.log('[BILLBOARD_GET]', error);
+    console.log('[CATEGORY_GET]', error);
     return new NextResponse('Internal Server Error', { status: 500 });
   }
 }
@@ -24,7 +22,7 @@ export async function GET(_req: Request, { params }: { params: { billboardId: st
 interface Params {
   params: {
     storeId: string;
-    billboardId: string;
+    sizeId: string;
   };
 }
 
@@ -36,11 +34,11 @@ export async function PATCH(req: Request, { params }: Params) {
 
     const body = await req.json();
 
-    const { label, imageUrl } = body;
-    if (!label || !imageUrl)
+    const { name, value } = body;
+    if (!name || !value)
       return new NextResponse('At least one field required. Label or image url', { status: 404 });
 
-    if (!params.billboardId) return new NextResponse('Billboard ID required', { status: 404 });
+    if (!params.sizeId) return new NextResponse('Size ID required', { status: 404 });
 
     const storeByUserId = await prismadb.store.findFirst({
       where: {
@@ -51,36 +49,33 @@ export async function PATCH(req: Request, { params }: Params) {
 
     if (!storeByUserId) return new NextResponse('Unauthorized', { status: 404 });
 
-    const billboard = await prismadb.billboard.updateMany({
+    const size = await prismadb.size.updateMany({
       where: {
-        id: params.billboardId,
+        id: params.sizeId,
         // userId,
       },
       data: {
-        label,
-        imageUrl,
+        name,
+        value,
       },
     });
 
-    return NextResponse.json({ message: 'Billboard changed', billboard }, { status: 200 });
+    return NextResponse.json({ message: 'Size changed', size }, { status: 200 });
   } catch (error) {
-    console.log('[BILLBOARD_PATCH]', error);
+    console.log('[CATEGORY_PATCH]', error);
     return new NextResponse('Internal Server Error', { status: 500 });
   }
 }
 
 /* DELETE REQUEST */
 
-export async function DELETE(
-  _req: Request,
-  { params }: { params: { storeId: string; billboardId: string } }
-) {
+export async function DELETE(_req: Request, { params }: { params: { storeId: string; sizeId: string } }) {
   try {
     const { userId } = auth();
 
     if (!userId) return new NextResponse('Unauthenticated', { status: 401 });
 
-    if (!params.billboardId) return new NextResponse('Billboard ID required', { status: 404 });
+    if (!params.sizeId) return new NextResponse('Size ID required', { status: 404 });
 
     const storeByUserId = await prismadb.store.findFirst({
       where: {
@@ -91,17 +86,15 @@ export async function DELETE(
 
     if (!storeByUserId) return new NextResponse('Unauthorized', { status: 404 });
 
-    const billboard = await prismadb.billboard.delete({
+    const size = await prismadb.size.delete({
       where: {
-        id: params.billboardId,
+        id: params.sizeId,
       },
     });
-    const publicID = extractPublicId(billboard.imageUrl);
-    await deleteImageCloudinary(publicID);
 
-    return NextResponse.json({ message: 'Billboard deleted', billboard }, { status: 200 });
+    return NextResponse.json({ message: 'Size deleted', size }, { status: 200 });
   } catch (error) {
-    console.log('[BILLBOARD_PATCH]', error);
+    console.log('[CATEGORY_PATCH]', error);
     return new NextResponse('Internal Server Error', { status: 500 });
   }
 }
