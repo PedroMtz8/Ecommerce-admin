@@ -1,62 +1,119 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// // MYSQL CONFIG
 
+// generator client {
+//   provider = "prisma-client-js"
+// }
+
+// datasource db {
+//   provider = "mysql"
+//   url      = env("DATABASE_URL")
+//   // relationMode = "prisma"
+// }
+
+// model Store {
+//   id String @id @default(cuid())
+//   name String
+//   userId String
+//   sizes Size[] @relation("StoreToSize")
+//   billBoard Billboard[] @relation("StoreToBillboard")
+//   category Category[] @relation("StoreToCategory")
+//   createdAt DateTime
+//   updatedAt DateTime
+// }
+
+// model Billboard {
+//   id String @id @default(cuid())
+//   storeId String
+//   store Store @relation("StoreToBillboard", fields: [storeId], references: [id])
+//   categories Category[]
+//   label String
+//   imageUrl String
+//   createdAt DateTime
+//   updatedAt DateTime
+
+//   @@index([storeId])
+// }
+
+// model Category {
+//   id String @id @default(uuid())
+//   storeId String
+//   store Store @relation("StoreToCategory", fields: [storeId], references: [id])
+//   billboardId String
+//   billboard Billboard @relation(fields: [billboardId], references: [id])
+//   name String
+//   createdAt DateTime
+//   updatedAt DateTime
+
+//   @@index([storeId])
+//   @@index([billboardId])
+// }
+
+// model Size {
+//   id String @id @default(uuid())
+//   storeId String
+//   store Store @relation("StoreToSize", fields: [storeId], references: [id])
+//   name String
+//   value String
+//   createdAt DateTime
+//   updatedAt DateTime
+   
+//   @@index([storeId])
+// }
+
+
+// MONGODB CONFIG: 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
-  // relationMode = "prisma"
 }
 
 model Store {
-  id String @id @default(cuid())
-  name String
-  userId String
-  sizes Size[] @relation("StoreToSize")
-  billBoard Billboard[] @relation("StoreToBillboard")
-  category Category[] @relation("StoreToCategory")
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  userId    String
+  sizes     Size[]
+  billBoard Billboard[]
+  category  Category[]
   createdAt DateTime
   updatedAt DateTime
 }
 
 model Billboard {
-  id String @id @default(cuid())
-  storeId String
-  store Store @relation("StoreToBillboard", fields: [storeId], references: [id])
+  id         String     @id @default(auto()) @map("_id") @db.ObjectId
+  storeId    String @db.ObjectId
   categories Category[]
-  label String
-  imageUrl String
-  createdAt DateTime
-  updatedAt DateTime
-
+  label      String
+  imageUrl   String
+  createdAt  DateTime
+  updatedAt  DateTime
+  store      Store      @relation(fields: [storeId], references: [id])
   @@index([storeId])
 }
 
 model Category {
-  id String @id @default(uuid())
-  storeId String
-  store Store @relation("StoreToCategory", fields: [storeId], references: [id])
-  billboardId String
-  billboard Billboard @relation(fields: [billboardId], references: [id])
-  name String
-  createdAt DateTime
-  updatedAt DateTime
-
+  id         String     @id @default(auto()) @map("_id") @db.ObjectId
+  storeId    String @db.ObjectId
+  billboardId String @db.ObjectId
+  name       String
+  createdAt  DateTime
+  updatedAt  DateTime
+  billboard   Billboard  @relation(fields: [billboardId], references: [id])
+  store   Store  @relation(fields: [storeId], references: [id])
   @@index([storeId])
   @@index([billboardId])
 }
 
 model Size {
-  id String @id @default(uuid())
-  storeId String
-  store Store @relation("StoreToSize", fields: [storeId], references: [id])
-  name String
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  storeId String @db.ObjectId
+  name   String
   value String
   createdAt DateTime
   updatedAt DateTime
-   
+  store   Store  @relation(fields: [storeId], references: [id])
   @@index([storeId])
 }
