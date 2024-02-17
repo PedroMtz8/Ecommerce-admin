@@ -26,7 +26,7 @@ export default async function BillboardsPage({ params }: BillboardsPageProps) {
 
   return (
     <div className="flex-col  ">
-      <div className="flex-1 space-y-4 p-4 pt-6 ">
+      <div className="flex-1 space-y-4">
         <BillboardClient data={formatedBillboards} />
       </div>
     </div>
