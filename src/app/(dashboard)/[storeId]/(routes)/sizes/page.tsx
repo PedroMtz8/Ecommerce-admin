@@ -8,7 +8,7 @@ interface SIzesPageProps {
   };
 }
 
-export default async function SIzesPage({ params }: SIzesPageProps) {
+export default async function SizesPage({ params }: SIzesPageProps) {
   const sizes = await prismadb.size.findMany({
     where: {
       storeId: params.storeId,
