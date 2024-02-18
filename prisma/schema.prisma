@@ -60,6 +60,81 @@
 //   @@index([storeId])
 // }
 
+// model Order {
+//   id        String    @id @default(uuid())
+//   storeId     String    // Foreign Key to Store
+//   store       Store     @relation("StoreToOrder", fields: [storeId], references: [id])
+//   orderItems OrderItem[] // Relation to OrderItem model
+//   isPaid     Boolean   @default(false)
+//   phone      String    @default("")
+//   address    String    @default("")
+//   createdAt DateTime  @default(now())
+//   updatedAt DateTime  @updatedAt
+
+//   @@index([storeId])
+// }
+
+// model OrderItem {
+//   id        String  @id @default(uuid())
+//   orderId   String  // Foreign Key to Order
+//   order     Order   @relation(fields: [orderId], references: [id])
+//   productId String  // Foreign Key to Product
+//   product   Product @relation(fields: [productId], references: [id])
+
+//   @@index([orderId])
+//   @@index([productId])
+// }
+
+// model Product {
+//   id          String    @id @default(uuid())
+//   storeId     String    // Foreign Key to Store
+//   store       Store     @relation("StoreToProduct", fields: [storeId], references: [id])
+//   categoryId  String    // Foreign Key to Category
+//   category    Category  @relation("CategoryToProduct", fields: [categoryId], references: [id])
+//   name        String
+//   price       Decimal
+//   isFeatured  Boolean   @default(false)
+//   isArchived  Boolean   @default(false)
+//   sizeId      String    // Foreign Key to Size
+//   size        Size      @relation(fields: [sizeId], references: [id])
+//   colorId     String    // Foreign Key to Color
+//   color       Color     @relation(fields: [colorId], references: [id])
+//   images      Image[]   // Relation to Image model
+//   orderItems  OrderItem[]   // Relation to Order model
+//   createdAt   DateTime  @default(now())
+//   updatedAt   DateTime  @updatedAt
+
+//   @@index([storeId])
+//   @@index([categoryId])
+//   @@index([sizeId])
+//   @@index([colorId])
+// }
+
+// model Color {
+//   id          String   @id @default(uuid())
+//   storeId     String   // Foreign Key to Store
+//   store       Store    @relation("StoreToColor", fields: [storeId], references: [id])
+//   name        String
+//   value       String
+//   products    Product[] // Relation to Product model
+//   createdAt   DateTime  @default(now())
+//   updatedAt   DateTime  @updatedAt
+
+//   @@index([storeId])
+// }
+
+// model Image {
+//   id          String   @id @default(uuid())
+//   productId   String   // Foreign Key to Product
+//   product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+//   url         String   // URL of the image
+//   createdAt   DateTime @default(now())
+//   updatedAt   DateTime @updatedAt
+
+//   @@index([productId])
+// }
+
+
 
 // MONGODB CONFIG: 
 generator client {
@@ -76,8 +151,11 @@ model Store {
   name      String
   userId    String
   sizes     Size[]
-  billBoard Billboard[]
-  category  Category[]
+  billBoards Billboard[]
+  categories  Category[]
+  orders    Order[]
+  colors    Color[]
+  products  Product[] @relation("StoreToProduct")
   createdAt DateTime
   updatedAt DateTime
 }
@@ -102,6 +180,7 @@ model Category {
   createdAt  DateTime
   updatedAt  DateTime
   billboard   Billboard  @relation(fields: [billboardId], references: [id])
+  products    Product[]
   store   Store  @relation(fields: [storeId], references: [id])
   @@index([storeId])
   @@index([billboardId])
@@ -112,8 +191,83 @@ model Size {
   storeId String @db.ObjectId
   name   String
   value String
+  products Product[]
   createdAt DateTime
   updatedAt DateTime
   store   Store  @relation(fields: [storeId], references: [id])
   @@index([storeId])
+}
+
+model Order {
+  id  String @id @default(auto()) @map("_id") @db.ObjectId
+  storeId     String @db.ObjectId   // Foreign Key to Store
+  store       Store     @relation(fields: [storeId], references: [id])
+  orderItems OrderItem[] // Relation to OrderItem model
+  isPaid     Boolean   @default(false)
+  phone      String    @default("")
+  address    String    @default("")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([storeId])
+}
+
+model OrderItem {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  orderId   String @db.ObjectId  // Foreign Key to Order
+  order     Order   @relation(fields: [orderId], references: [id])
+  productId String @db.ObjectId  // Foreign Key to Product
+  product   Product @relation(fields: [productId], references: [id])
+
+  @@index([orderId])
+  @@index([productId])
+}
+
+model Product {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  storeId     String    @db.ObjectId // Foreign Key to Store
+  store       Store     @relation("StoreToProduct", fields: [storeId], references: [id])
+  categoryId  String    @db.ObjectId // Foreign Key to Category
+  category    Category  @relation(fields: [categoryId], references: [id])
+  name        String
+  price       Float
+  isFeatured  Boolean   @default(false)
+  isArchived  Boolean   @default(false)
+  sizeId      String    @db.ObjectId // Foreign Key to Size
+  size        Size      @relation(fields: [sizeId], references: [id])
+  colorId     String    @db.ObjectId // Foreign Key to Color
+  color       Color     @relation(fields: [colorId], references: [id])
+  images      Image[]   // Relation to Image model
+  orderItems  OrderItem[]   // Relation to Order model
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([storeId])
+  @@index([categoryId])
+  @@index([sizeId])
+  @@index([colorId])
+}
+
+model Color {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  storeId     String   @db.ObjectId // Foreign Key to Store
+  store       Store    @relation(fields: [storeId], references: [id])
+  name        String
+  value       String
+  products    Product[] // Relation to Product model
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([storeId])
+}
+
+model Image {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  productId   String   @db.ObjectId // Foreign Key to Product
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url         String   // URL of the image
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([productId])
 }

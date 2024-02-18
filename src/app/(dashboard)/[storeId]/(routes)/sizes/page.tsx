@@ -8,7 +8,7 @@ interface SIzesPageProps {
   };
 }
 
-export default async function SIzesPage({ params }: SIzesPageProps) {
+export default async function SizesPage({ params }: SIzesPageProps) {
   const sizes = await prismadb.size.findMany({
     where: {
       storeId: params.storeId,
@@ -27,7 +27,7 @@ export default async function SIzesPage({ params }: SIzesPageProps) {
 
   return (
     <div className="flex-col  ">
-      <div className="flex-1 space-y-4 p-4 pt-6 ">
+      <div className="flex-1 space-y-4 ">
         <SizeClient data={formatedSIzes} />
       </div>
     </div>
