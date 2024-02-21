@@ -3,6 +3,16 @@ import { auth } from '@clerk/nextjs';
 
 import prismadb from '@/lib/prismadb';
 
+const propertiesRequired: { [key: string]: string } = {
+  name: 'Name is required',
+  images: 'Images are required',
+  price: 'Price is required',
+  categoryId: 'Category id is required',
+  colorId: 'Color id is required',
+  sizeId: 'Size id is required',
+  storeId: 'Store id is required',
+};
+
 export async function POST(req: Request, { params }: { params: { storeId: string } }) {
   try {
     const { userId } = auth();
@@ -15,32 +25,9 @@ export async function POST(req: Request, { params }: { params: { storeId: string
       return new NextResponse('Unauthenticated', { status: 403 });
     }
 
-    if (!name) {
-      return new NextResponse('Name is required', { status: 400 });
-    }
-
-    if (!images || !images.length) {
-      return new NextResponse('Images are required', { status: 400 });
-    }
-
-    if (!price) {
-      return new NextResponse('Price is required', { status: 400 });
-    }
-
-    if (!categoryId) {
-      return new NextResponse('Category id is required', { status: 400 });
-    }
-
-    if (!colorId) {
-      return new NextResponse('Color id is required', { status: 400 });
-    }
-
-    if (!sizeId) {
-      return new NextResponse('Size id is required', { status: 400 });
-    }
-
-    if (!params.storeId) {
-      return new NextResponse('Store id is required', { status: 400 });
+    if (!name || !images || !price || !categoryId || !colorId || !sizeId || !params.storeId) {
+      const missingProperty = Object.keys(body).find((key) => !body[key])! || 'Fields missing';
+      return new NextResponse(propertiesRequired[missingProperty], { status: 400 });
     }
 
     const storeByUserId = await prismadb.store.findFirst({
