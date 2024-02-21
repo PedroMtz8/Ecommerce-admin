@@ -29,6 +29,11 @@ export default function MainNav({ className /* ...props  */ }: React.HTMLAttribu
       active: pathName === `/${params.storeId}/sizes`,
     },
     {
+      href: `/${params.storeId}/colors`,
+      label: 'Colors',
+      active: pathName === `/${params.storeId}/colors`,
+    },
+    {
       href: `/${params.storeId}/orders`,
       label: 'Orders',
       active: pathName === `/${params.storeId}/orders`,
