@@ -77,16 +77,6 @@ export async function GET(req: Request, { params }: { params: { storeId: string 
     if (!params.storeId) {
       return new NextResponse('Store id is required', { status: 400 });
     }
-    console.log('query', {
-      where: {
-        storeId: params.storeId,
-        categoryId,
-        colorId,
-        sizeId,
-        isFeatured: isFeatured ? true : undefined,
-        isArchived: false,
-      },
-    });
 
     let query: any = {
       storeId: params.storeId,

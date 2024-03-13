@@ -16,7 +16,7 @@ export async function OPTIONS() {
 }
 
 export async function POST(req: Request, { params }: { params: { storeId: string } }) {
-  const { productIds } = await req.json();
+  const { productIds }: { productIds: string[] } = await req.json();
 
   if (!productIds || productIds.length === 0) {
     return new NextResponse('Product ids are required', { status: 400 });
@@ -24,12 +24,15 @@ export async function POST(req: Request, { params }: { params: { storeId: string
 
   const products = await prismadb.product.findMany({
     where: {
-      id: {
-        in: productIds,
-      },
+      OR: productIds.map((id) => ({ id })),
+      // id: {
+      //   in: productIds,
+      // },
+    },
+    include: {
+      images: true,
     },
   });
-
   // @typescript-eslint/naming-convention
   const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
 
@@ -40,6 +43,7 @@ export async function POST(req: Request, { params }: { params: { storeId: string
         currency: 'USD',
         product_data: {
           name: product.name,
+          images: product.images.map((image) => image.url),
         },
         unit_amount: product.price * 100,
       },
